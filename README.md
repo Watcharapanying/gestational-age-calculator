@@ -4,3 +4,5 @@
 รองรับ 3 กรณี: รู้ LMP / รู้วันกำหนดคลอด / รู้อายุครรภ์ปัจจุบัน
 
 เปิดใช้งาน: https://watcharapanying.github.io/gestational-age-calculator/
+
+มีหน้าคำนวณ Apgar Score (apgar.html) ลิงก์อยู่ใต้ตัวคำนวณอายุครรภ์

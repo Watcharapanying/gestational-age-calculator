@@ -46,6 +46,11 @@ button.go{font:inherit;font-weight:600;background:var(--pink);color:#fff;border:
 .note{font-size:14px;color:var(--muted);margin:12px 0 0}
 .err{color:#c4475f;margin-top:12px}
 .tri{display:inline-block;padding:2px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-size:13.5px;margin-top:10px}
+.more{display:flex;align-items:center;gap:12px;margin-top:16px;padding:14px 18px;border-radius:20px;background:var(--card);border:1px solid var(--line);color:var(--ink);text-decoration:none}
+.more:hover{border-color:var(--pink)}
+.more b{font-family:Mitr,sans-serif;font-weight:500;font-size:18px;color:var(--pink)}
+.more small{display:block;color:var(--muted);font-size:13.5px}
+.more .ar{margin-left:auto;font-size:22px;color:var(--pink)}
 .foot{margin-top:22px;font-size:13px;color:var(--muted);text-align:center}
 </style>
 </head>
@@ -71,6 +76,7 @@ button.go{font:inherit;font-weight:600;background:var(--pink);color:#fff;border:
     <form id="f3" data-p="3" hidden><h2>กรอกอายุครรภ์ ณ วันที่คำนวณ</h2><div class="row"><label>สัปดาห์<input type="number" id="w3" min="0" max="44" inputmode="numeric" placeholder="เช่น 20"></label><label>วัน<select id="dd3"></select></label><button class="go">คำนวณ</button></div></form>
     <div class="res" id="res" aria-live="polite"></div>
   </div>
+  <a class="more" href="apgar.html"><span style="font-size:30px">👶</span><span><b>คำนวณ Apgar</b><small>ประเมินทารกแรกเกิดที่นาทีที่ 1 และ 5 พร้อมแปลผลและคำแนะนำ</small></span><span class="ar">→</span></a>
   <p class="foot">คำนวณตามกฎของ Naegele (LMP + 280 วัน) สมมติรอบเดือน 28 วัน ใช้ประกอบการตัดสินใจทางคลินิกเท่านั้น</p>
 </div>
 <script>

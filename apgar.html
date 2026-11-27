@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="manifest" href="manifest.webmanifest">
+<title>Apgar Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500&family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f5ee;--card:#fff;--ink:#2f2a28;--muted:#7d726d;--line:#e7ddd2;--sel:#3b82c4;--sel-soft:#e4effa;--g:#dff5d9;--y:#fdf0c4;--o:#fde0c8;--r:#fbd3d3;--gi:#2e7d32;--yi:#9a6b00;--oi:#b45309;--ri:#b91c1c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d1b19;--card:#292624;--ink:#f1ebe5;--muted:#b3a89f;--line:#3d3834;--sel:#7fb3ea;--sel-soft:#233449;--g:#1f3a22;--y:#3a3218;--o:#3d2a1a;--r:#3f1f1f;--gi:#8bd68f;--yi:#f0c75a;--oi:#f6a560;--ri:#f58b8b}}
+:root[data-theme="dark"]{--bg:#1d1b19;--card:#292624;--ink:#f1ebe5;--muted:#b3a89f;--line:#3d3834;--sel:#7fb3ea;--sel-soft:#233449;--g:#1f3a22;--y:#3a3218;--o:#3d2a1a;--r:#3f1f1f;--gi:#8bd68f;--yi:#f0c75a;--oi:#f6a560;--ri:#f58b8b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Sarabun,system-ui,sans-serif;line-height:1.55}
+h1,h2,.mitr{font-family:Mitr,Sarabun,sans-serif;font-weight:500}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px 60px}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:16px 0;gap:10px;flex-wrap:wrap}
+.back{text-decoration:none;color:var(--sel);font-weight:600;background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:999px}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px}
+.seg button{font:inherit;border:0;background:none;color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sel);color:#fff}
+h1{margin:4px 0 2px;font-size:clamp(26px,5vw,38px)}
+.sub{margin:0 0 18px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+@media (max-width:880px){.layout{grid-template-columns:1fr}}
+.crit{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px 14px;margin-bottom:12px}
+.crit h2{margin:0 0 8px;font-size:17px;display:flex;align-items:baseline;gap:8px}
+.crit h2 .L{font-size:28px;color:var(--sel);line-height:1}
+.crit h2 small{font-family:Sarabun;color:var(--muted);font-weight:400;font-size:14px}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.opt{font:inherit;color:var(--ink);background:var(--bg);border:2px solid transparent;border-radius:14px;padding:8px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;position:relative}
+.opt svg{width:100%;max-width:110px;height:72px}
+.opt .pt{position:absolute;top:6px;left:8px;font-family:Mitr;font-size:15px;color:var(--muted)}
+.opt span{font-size:13.5px;line-height:1.3}
+.opt[aria-pressed="true"]{border-color:var(--sel);background:var(--sel-soft)}
+.opt[aria-pressed="true"]::after{content:"✓";position:absolute;top:4px;right:8px;color:var(--sel);font-weight:700}
+.side{position:sticky;top:12px;display:grid;gap:12px}
+.score{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;text-align:center}
+.score .n{font-family:Mitr;font-size:64px;line-height:1}
+.score .n small{font-size:22px;color:var(--muted)}
+.pill{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;font-weight:600}
+.both{margin-top:8px;font-size:14px;color:var(--muted)}
+.adv{border-radius:18px;padding:14px 16px}
+.adv h3{margin:0 0 6px;font-family:Mitr;font-weight:500;font-size:17px}
+.adv ul{margin:0;padding-left:20px}
+.adv li{margin:2px 0}
+.band-g{background:var(--g)}.band-g .pill,.band-g h3{color:var(--gi)}
+.band-y{background:var(--y)}.band-y .pill,.band-y h3{color:var(--yi)}
+.band-o{background:var(--o)}.band-o .pill,.band-o h3{color:var(--oi)}
+.band-r{background:var(--r)}.band-r .pill,.band-r h3{color:var(--ri)}
+.pill.band-g,.pill.band-y,.pill.band-o,.pill.band-r{}
+.muted{color:var(--muted);font-size:14px}
+.reset{font:inherit;background:none;border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 14px;cursor:pointer;margin-top:10px}
+.tips{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px;font-size:14.5px}
+.tips h3{margin:0 0 4px;font-family:Mitr;font-weight:500;font-size:16px}
+#mini{display:none}@media (max-width:880px){#mini{display:block;position:fixed;left:50%;bottom:14px;transform:translateX(-50%);background:var(--sel);color:#fff;text-decoration:none;font-family:Mitr;padding:10px 20px;border-radius:999px;box-shadow:0 8px 20px -8px rgba(0,0,0,.5);white-space:nowrap}.wrap{padding-bottom:90px}}
+.foot{margin-top:16px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar"><a class="back" href="index.html">← คำนวณอายุครรภ์</a>
+    <div class="seg" role="group" aria-label="เวลาที่ประเมิน"><button data-m="1" aria-pressed="true">นาทีที่ 1</button><button data-m="5" aria-pressed="false">นาทีที่ 5</button></div></div>
+  <h1>Apgar Score</h1>
+  <p class="sub">กดเลือกภาพที่ตรงกับทารกในแต่ละหัวข้อ ระบบจะรวมคะแนน แปลผล และแนะนำการดูแลให้ทันที</p>
+  <div class="layout">
+    <div id="crits"></div>
+    <aside class="side">
+      <div class="score" id="scoreBox"></div>
+      <div class="adv" id="adv"></div>
+      <div class="tips"><h3>🎯 ทริคจำง่าย</h3>A–P–G–A–R = สี ชีพจร หน้าตา ดิ้น หายใจ<br>ยิ่งคะแนนรวมเยอะ = เด็กแข็งแรง<br>ต่ำกว่า 7 ต้องจับตา · ต่ำกว่า 4 ต้องช่วยชีวิตทันที!</div>
+    </aside>
+  </div>
+  <p class="foot">เนื้อหาการแปลผลและคำแนะนำ: เครดิต Nurse Concept · ประเมินที่ 1 และ 5 นาทีหลังคลอด · การเริ่มช่วยหายใจ/กู้ชีพทารกไม่ต้องรอคะแนน Apgar ให้ประเมินการหายใจและอัตราการเต้นหัวใจทันทีตามแนวทาง NRP</p>
+</div>
+<a id="mini" href="#scoreBox"></a>
+<script>
+const ST='stroke="#4a3a35" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"';
+// baby lying: skin=body color, ext=hands/feet color, pose 0 limp,1 some flexion,2 active
+function baby(skin,ext,pose){
+  const limbs=[
+    ['M44 42 l-14 14','M76 42 l14 14','M52 58 l-6 18','M68 58 l6 18'],
+    ['M44 42 q-12 2 -12 12','M76 42 q12 2 12 12','M52 58 q-12 6 -6 16','M68 58 q12 6 6 16'],
+    ['M44 42 q-14 -4 -12 -16','M76 42 q14 -4 12 -16','M52 58 q-16 0 -10 -12','M68 58 q16 0 10 -12']][pose];
+  const ends=[[[30,56],[90,56],[46,76],[74,76]],[[32,55],[88,55],[46,74],[74,74]],[[32,25],[88,25],[42,45],[78,45]]][pose];
+  return `<svg viewBox="0 0 120 84"><g ${ST}>${limbs.map(d=>`<path d="${d}" fill="none" stroke="#4a3a35" stroke-width="10"/>`).join('')}${limbs.map(d=>`<path d="${d}" fill="none" stroke="${skin}" stroke-width="6"/>`).join('')}
+  ${ends.map(([x,y])=>`<circle cx="${x}" cy="${y}" r="5" fill="${ext}"/>`).join('')}
+  <ellipse cx="60" cy="48" rx="17" ry="16" fill="${skin}"/><path d="M45 54 q15 12 30 0 v4 q-15 12 -30 0z" fill="#fff"/>
+  <circle cx="60" cy="22" r="14" fill="${skin}"/><path d="M48 16 q8 -10 22 -4" fill="none" stroke="#6b4a3a" stroke-width="3"/>
+  <path d="M54 22 q2 2 4 0 M62 22 q2 2 4 0" fill="none" stroke-width="1.6"/></g>
+  ${pose==2?`<path d="M18 20 q-4 4 0 8 M102 20 q4 4 0 8" fill="none" stroke="#e2728b" stroke-width="2" stroke-linecap="round"/>`:''}</svg>`;}
+function heart(kind){
+  const col=kind==0?'#c9c4c4':'#e53e3e';
+  const ln=kind==0?'M18 44 h84':kind==1?'M18 44 h34 l4 -14 l5 26 l4 -12 h37':'M18 44 h14 l3 -14 l4 24 l3 -10 h12 l3 -14 l4 24 l3 -10 h12 l3 -14 l4 24 l3 -10 h12';
+  return `<svg viewBox="0 0 120 84"><path d="M60 78 C20 52 22 16 42 14 C52 13 58 20 60 26 C62 20 68 13 78 14 C98 16 100 52 60 78Z" fill="${col}" ${ST}/><path d="${ln}" fill="none" stroke="#222" stroke-width="3" stroke-linejoin="round"/></svg>`;}
+function face(k){
+  const eyes=k==0?'<path d="M44 40 q5 4 10 0 M66 40 q5 4 10 0" fill="none"/>':k==1?'<path d="M44 36 l10 4 M76 36 l-10 4" fill="none"/><path d="M45 42 q4 3 8 0 M67 42 q4 3 8 0" fill="none"/>':'<path d="M44 38 l10 4 l-10 4 M76 38 l-10 4 l10 4" fill="none"/>';
+  const mouth=k==0?'<path d="M54 58 h12" fill="none"/>':k==1?'<path d="M52 60 q8 -8 16 0" fill="none"/>':'<ellipse cx="60" cy="60" rx="9" ry="8" fill="#c0392b"/>';
+  const tears=k==2?'<path d="M40 48 q-2 6 2 8 M80 48 q2 6 -2 8" fill="none" stroke="#5aa9e6"/>':'';
+  return `<svg viewBox="0 0 120 84"><g ${ST}><circle cx="60" cy="44" r="30" fill="#fde3cf"/><path d="M38 26 q12 -18 34 -10" fill="none" stroke="#6b4a3a" stroke-width="4"/>${eyes}${mouth}${tears}</g>${k?'':''}</svg>`;}
+function lung(k){
+  const f=k==0?'#f6c9d2':k==1?'#ef8fa6':'#c2414f';
+  const w=k==0?'':k==1?'<path d="M30 46 q8 -10 16 0 t16 0 t16 0 t16 0" fill="none" stroke="#c2414f" stroke-width="2"/>':'<path d="M28 46 q5 -10 10 0 t10 0 t10 0 t10 0 t10 0 t10 0 t10 0" fill="none" stroke="#5a1018" stroke-width="2"/>';
+  const no=k==0?'<circle cx="60" cy="44" r="36" fill="none" stroke="#d33" stroke-width="3.5"/><path d="M35 20 l50 50" stroke="#d33" stroke-width="3.5"/>':'';
+  return `<svg viewBox="0 0 120 84"><g ${ST}><path d="M60 8 v22" stroke-width="4"/><path d="M56 30 q-20 -6 -24 16 q-4 28 10 30 q14 2 14 -18z" fill="${f}"/><path d="M64 30 q20 -6 24 16 q4 28 -10 30 q-14 2 -14 -18z" fill="${f}"/></g>${w}${no}</svg>`;}
+const P='#fbd5c0',B='#a99bc9';
+const C=[
+ {L:'A',en:'Appearance',th:'สีผิว',o:[[baby(B,B,0),'เขียวทั้งตัว'],[baby(P,B,0),'เขียวปลายมือปลายเท้า'],[baby(P,P,0),'ชมพูทั้งตัว']]},
+ {L:'P',en:'Pulse',th:'ชีพจร',o:[[heart(0),'No pulse'],[heart(1),'HR < 100 bpm'],[heart(2),'HR > 100 bpm']]},
+ {L:'G',en:'Grimace',th:'ปฏิกิริยาตอบสนอง',o:[[face(0),'ไม่มีปฏิกิริยา'],[face(1),'แสยะปาก'],[face(2),'ไอ จาม / ร้องเสียงดัง']]},
+ {L:'A',en:'Activity',th:'การเคลื่อนไหว',o:[[baby(P,P,0),'อ่อนปวกเปียก'],[baby(P,P,1),'แขนขางอเล็กน้อย'],[baby(P,P,2),'เคลื่อนไหวได้ดี']]},
+ {L:'R',en:'Respiration',th:'การหายใจ',o:[[lung(0),'ไม่หายใจ'],[lung(1),'หายใจช้า ไม่สม่ำเสมอ'],[lung(2),'หายใจดี ร้องเสียงดัง']]}];
+const BANDS=[
+ {min:8,c:'band-g',t:'🟢 8–10 คะแนน: อยู่ในภาวะดี (No asphyxia)',a:['✅ ดูแลทั่วไป ให้ความอบอุ่น เช็ดตัว ห่มผ้า','🧘‍♀️ ไม่มีอาการขาดออกซิเจน ไม่ต้องช่วยหายใจ']},
+ {min:5,c:'band-y',t:'🟡 5–7 คะแนน: ขาด O₂ เล็กน้อย (Mild asphyxia)',a:['➡️ กระตุ้นการหายใจทันที เช่น ถูฝ่าเท้า ลูบหลัง กระตุ้นให้ร้องเสียงดัง','👀 ถ้าเด็กไม่ active หรือหายใจช้า ไม่สม่ำเสมอ และมารดาได้รับยาแก้ปวดกลุ่ม Narcotic ระหว่างคลอด อาจต้องใช้ Naloxone (Narcan) ตามแผนการรักษา']},
+ {min:3,c:'band-o',t:'🟠 3–4 คะแนน: ขาด O₂ ปานกลาง (Moderate asphyxia)',a:['🛑 ต้องช่วยหายใจ ให้ O₂ mask with bag','ถ้า HR < 100 bpm ให้ทำ PPV (Positive Pressure Ventilation)','⚠️ ติดตามใกล้ชิด เพราะอาจทรุดลงได้']},
+ {min:0,c:'band-r',t:'🔴 0–2 คะแนน: ขาด O₂ รุนแรง (Severe asphyxia)',a:['🚨 ต้องช่วยชีวิตทันที!','ใส่ท่อช่วยหายใจ (ET tube)','นวดหัวใจ ถ้า HR < 60 ครั้ง/นาที','💓 หัวใจช้า หายใจไม่ได้ ตัวเขียวม่วง = ต้องรีบช่วยทันที']}];
+const sel={1:Array(5).fill(null),5:Array(5).fill(null)};let M=1;
+document.getElementById('crits').innerHTML=C.map((c,i)=>`<section class="crit"><h2><span class="L">${c.L}</span>${c.en}<small>${c.th}</small></h2><div class="opts">${c.o.map(([svg,t],v)=>`<button class="opt" data-i="${i}" data-v="${v}" aria-pressed="false"><b class="pt">${v}</b>${svg}<span>${t}</span></button>`).join('')}</div></section>`).join('');
+const total=m=>sel[m].reduce((a,b)=>a+(b||0),0),done=m=>sel[m].every(v=>v!==null);
+function render(){
+  document.querySelectorAll('.opt').forEach(b=>b.setAttribute('aria-pressed',sel[M][+b.dataset.i]===+b.dataset.v));
+  const s=total(M),n=sel[M].filter(v=>v!==null).length,band=BANDS.find(b=>s>=b.min);
+  const other=M==1?5:1,oth=done(other)?`นาทีที่ ${other}: ${total(other)}/10`:'';
+  document.getElementById('scoreBox').innerHTML=`<div class="muted">คะแนน Apgar นาทีที่ ${M}</div><div class="n">${s}<small>/10</small></div>`+
+    (n<5?`<div class="muted" style="margin-top:8px">เลือกแล้ว ${n}/5 หัวข้อ</div>`:`<span class="pill ${band.c}">${band.t.replace(/^\S+ /,'')}</span>`)+
+    (oth?`<div class="both">${oth}</div>`:'')+`<br><button class="reset" id="reset">ล้างค่านาทีที่ ${M}</button>`;
+  document.getElementById('mini').textContent=`คะแนน ${s}/10 · ${n<5?`เลือกแล้ว ${n}/5`:'ดูผลและคำแนะนำ ↓'}`;
+  const adv=document.getElementById('adv');
+  if(n<5){adv.className='adv tips';adv.innerHTML=`<h3>การดูแล</h3><span class="muted">เลือกให้ครบทั้ง 5 หัวข้อเพื่อดูการแปลผลและคำแนะนำ</span>`;}
+  else{adv.className='adv '+band.c;adv.innerHTML=`<h3>${band.t}</h3><ul>${band.a.map(x=>`<li>${x}</li>`).join('')}</ul>${M==1&&s<7?'<p class="muted" style="margin:8px 0 0">ประเมินซ้ำที่นาทีที่ 5</p>':''}`;}
+  document.getElementById('reset').onclick=()=>{sel[M]=Array(5).fill(null);render();};}
+document.getElementById('crits').addEventListener('click',e=>{const b=e.target.closest('.opt');if(!b)return;const i=+b.dataset.i,v=+b.dataset.v;sel[M][i]=sel[M][i]===v?null:v;render();});
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{M=+b.dataset.m;document.querySelectorAll('.seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();});
+render();
+</script>
+</body>
+</html>
